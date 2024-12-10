@@ -22,13 +22,17 @@ fn main() {
             item.0
         );
 
-        let res = req.get(url).send().expect("Failed to send request");
+        let response = req.get(url).send().expect("Failed to send request");
 
-        if res.text().unwrap().contains("<div class=\"error_ctn\">") {
+        if response
+            .text()
+            .unwrap()
+            .contains("<div class=\"error_ctn\">")
+        {
             println!("Unavailable, unsubscribing...");
             ugc.unsubscribe_item(PublishedFileId(item.0), |result| match result {
-                Ok(_) => println!("Unsubscribed from item"),
-                Err(e) => println!("Failed to unsubscribe from item: {}", e),
+                Ok(()) => println!("Unsubscribed from item"),
+                Err(e) => println!("Failed to unsubscribe from item: {e}"),
             });
         } else {
             println!("OK");
